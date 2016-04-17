@@ -1,8 +1,5 @@
 import gzip
-import re
-import http.cookiejar
-import urllib.request
-import urllib.parse
+import requests
 
 
 def ungzip(data):
@@ -16,16 +13,7 @@ def ungzip(data):
     return data
 
 
-def getOpener(head):
-    cj = http.cookiejar.CookieJar()
-    pro = urllib.request.HTTPCookieProcessor(cj)
-    opener = urllib.request.build_opener(pro)
-    header = []
-    for k, v in head.items():
-        elem = (k, v)
-        header.append(elem)
-    opener.addheaders = header
-    return opener
+
 
 
 head = {
@@ -39,10 +27,9 @@ head = {
 }
 
 
-def login():
+def login(session):
 
     url = 'http://rs.xidian.edu.cn/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
-    opener = getOpener(head)
 
     id = 'biubiu'
     password = '7234d7bea89a2ea70cfaaf9477197120'
@@ -55,13 +42,10 @@ def login():
 
     }
 
-    postData = urllib.parse.urlencode(post_dict).encode('utf-8')
+    response = session.post(url, data=post_dict, headers=head, allow_redirects=True)
 
-    with opener.open(url, postData) as f:
-        data = f.read()
-        data = ungzip(data)
 
-        print(data.decode('utf-8'))
 
 if __name__ == '__main__':
-    login()
+    session = requests.Session()
+    login(session)
