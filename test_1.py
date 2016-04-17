@@ -7,3 +7,6 @@ with request.urlopen('http://www.baidu.com') as f:
         print('%s: %s' % (k, v))
     print('Data', data.decode('utf-8'))
     print(type(f))
+    print(f.geturl())
+    print(f.info())
+    print(f.getcode())
